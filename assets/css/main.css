@@ -608,7 +608,7 @@ div.test img {
 }
 
 .back_to_top-2 .back-to-top-btn {
-  background: var(--tp-theme-green);
+  background: #FAD200;
 }
 
 /*----------------------------------------*/
@@ -1070,7 +1070,7 @@ div.test img {
 .green-btn {
   display: inline-block;
   padding: 10px 20px;
-  background-color: #68580d; /* Example green background */
+  background-color: #fad200; /* Example green background */
   color: white;
   text-decoration: none;
   border-radius: 5px;
