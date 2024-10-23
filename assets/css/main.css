@@ -23116,14 +23116,14 @@ div.price-open {
   -o-transform: translateY(-2px);
   transform: translateY(-2px);
 }
-.zoom-image {
+/* .zoom-image {
   transition: transform 0.3s ease-in-out;
-}
+} */
 
 /* Zoom-in effect on hover */
-.zoom-image:hover {
+/* .zoom-image:hover {
   transform: scale(1.1);
-}
+} */
 .desktop-only {
   display: block;
 }
@@ -23132,6 +23132,46 @@ div.price-open {
 @media (max-width: 768px) {
   .desktop-only {
       display: none;
+  }
+}
+
+.zoom-images {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+}
+
+.zoom-img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  position: absolute;
+  opacity: 0;
+  animation: zoomAnimation 5s forwards;
+  display: none; /* Initially hidden */
+}
+
+@keyframes zoomAnimation {
+  0% {
+      transform: scale(1);
+      opacity: 0;
+  }
+  10% {
+      opacity: 1;
+  }
+  50% {
+      transform: scale(1.5);
+      opacity: 1;
+  }
+  90% {
+      opacity: 1;
+  }
+  100% {
+      transform: scale(1);
+      opacity: 0;
   }
 }
 

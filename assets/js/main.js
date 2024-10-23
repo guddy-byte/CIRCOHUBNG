@@ -1980,7 +1980,6 @@
 		},
 	});
 
-
 	// 44. portfolio
 	$('.blog-masonry-active').isotope({
 		itemSelector: '.blog-masonry-item-active',
