@@ -1629,7 +1629,10 @@ div.test img {
 #loading-center {
   width: 100%;
   height: 100%;
-  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* position: relative; */
 }
 
 #loading-center-absolute {
@@ -2738,6 +2741,7 @@ div.test img {
   animation-name: title-anim;
   animation-duration: 5s;
   -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
   animation-delay: 0s;
 }
 @media (max-width: 767px) {
@@ -2797,7 +2801,7 @@ div.test img {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .section-title-4 {
@@ -6915,7 +6919,7 @@ blockquote cite::before {
   color: var(--tp-theme-primary);
 }
 .sidebar__widget ul li span {
-  float: right;
+  display: inline-block;
   font-family: var(--tp-ff-jakarta);
   font-weight: 500;
   font-size: 12px;
@@ -8615,7 +8619,7 @@ blockquote cite::before {
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
   line-height: 1;
   background-image: -webkit-linear-gradient(291.09deg, #FF4F99 27.31%, #7F37FE 73.17%);
   background-image: -moz-linear-gradient(291.09deg, #FF4F99 27.31%, #7F37FE 73.17%);
@@ -8902,6 +8906,7 @@ blockquote cite::before {
   animation-name: title-anim;
   animation-duration: 7s;
   -webkit-animation-iteration-count: infinite;
+  animation-iteration-count: infinite;
   animation-delay: 0s;
 }
 .tpbanner-content-two p {
@@ -9361,7 +9366,7 @@ blockquote cite::before {
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  text-fill-color: transparent;
+  -webkit-text-fill-color: transparent;
   padding: 0 0 20px 0;
 }
 .banner-4-btn .blue-btn {
@@ -23175,4 +23180,51 @@ div.price-open {
   }
 }
 
-/*# sourceMappingURL=main.css.map */
+.preloader_01 {
+  position: relative;
+  width: 150px;
+  height: 150px;
+}
+
+.rotating-circle_01 {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border: 4px solid #ffcc00; /* Yellow color */
+  border-top: 4px solid #3e3f08; /* Soft teal color */
+  border-radius: 50%;
+  animation: rotate 2s linear infinite;
+}
+
+.nigeria-map_01 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80px; /* Initial size */
+  max-width: 120px; /* Maximum size to stay within the circle */
+  max-height: 120px; /* Ensure it doesn't exceed the circle height */
+  animation: zoom 2s ease-in-out infinite;
+  object-fit: contain; /* Ensures the image scales proportionally */
+}
+
+@keyframes rotate {
+  0% {
+      transform: rotate(0deg);
+  }
+  100% {
+      transform: rotate(360deg);
+  }
+}
+
+@keyframes zoom {
+  0% {
+      width: 60px; /* Minimum size */
+  }
+  50% {
+      width: 100px; /* Maximum size, adjusted to fit within 120px max */
+  }
+  100% {
+      width: 60px; /* Back to minimum size */
+  }
+}

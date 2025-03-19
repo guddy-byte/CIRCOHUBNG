@@ -2066,6 +2066,14 @@
 		},
 	});
 
+	// Optional: You can add JavaScript to dynamically control the animation or stop it after a certain time
+		document.addEventListener("DOMContentLoaded", function() {
+			// Example: Stop the preloader after 5 seconds
+			setTimeout(() => {
+				document.querySelector('.preloader').style.display = 'none';
+			}, 5000);
+		});
+
 	////////////////////////////////////////////////////
 	// 05. One Page Scroll Js
 	if ($('.tp-onepage-menu li a').length > 0) { 
