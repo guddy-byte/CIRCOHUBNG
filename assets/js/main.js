@@ -43,6 +43,29 @@
 	if ($('#filt-monthly').length > 0) { 
 		tabtable_active();
 	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		// Elements
+		const video = document.getElementById('feature-video');
+		const playPauseBtn = document.querySelector('.play-pause');
+		const muteUnmuteBtn = document.querySelector('.mute-unmute');
+		const restartBtn = document.querySelector('.restart');
+		const videoContainer = document.querySelector('.video-container');
+		const content = document.querySelector('.content');
+		const galleryContainer = document.querySelector('.gallery-container');
+		const galleryItems = document.querySelectorAll('.gallery-item');
+		const prevBtn = document.querySelector('.prev-btn');
+		const nextBtn = document.querySelector('.next-btn');
+		const indicators = document.querySelectorAll('.indicator');
+		const slideTimer = document.querySelector('.slide-timer');
+		
+		// Variables
+		let currentGalleryIndex = 0;
+		let galleryInterval;
+		let autoplayEnabled = true;
+		let timerInterval;
+		let timeRemaining = 5; // 5 seconds per slide
+		
 	
 
 	// 02. nav-tabs-2
@@ -2093,4 +2116,260 @@
 
 
 
-})(jQuery);
+	//New circohub video
+		// Show initial title
+		function showInitialTitle() {
+		  content.classList.add('visible');
+		  
+		  // Hide title after 3 seconds
+		  setTimeout(() => {
+			content.classList.remove('visible');
+		  }, 3000);
+		}
+		
+		// Function to start the sequence
+		function startSequence() {
+		  // Reset everything
+		  videoContainer.classList.remove('split');
+		  galleryContainer.classList.remove('active');
+		  galleryItems.forEach(item => {
+			item.classList.remove('active', 'prev');
+		  });
+		  
+		  // Show title first
+		  showInitialTitle();
+		  
+		  // Set video to play from beginning
+		  video.currentTime = 0;
+		  video.play();
+		  
+		  // Listen for video end
+		  video.addEventListener('ended', showGallery, { once: true });
+		  
+		  // For demo purposes, you can use this timeout instead of waiting for the full video
+		  // Uncomment this and comment out the 'ended' event listener above for testing
+		  // setTimeout(showGallery, 10000); // 10 seconds for demo
+		}
+		
+		// Function to show gallery
+		function showGallery() {
+		  // Split the screen
+		  videoContainer.classList.add('split');
+		  
+		  // Show gallery container
+		  setTimeout(() => {
+			galleryContainer.classList.add('active');
+			
+			// Reset gallery index
+			currentGalleryIndex = 0;
+			
+			// Start gallery slideshow
+			showSlide(0);
+			startGalleryAutoplay();
+		  }, 1000);
+		}
+		
+		// Function to update timer display
+		function updateTimer() {
+		  slideTimer.textContent = timeRemaining;
+		}
+		
+		// Function to start timer for current slide
+		function startTimer() {
+		  // Clear any existing timer
+		  clearInterval(timerInterval);
+		  
+		  // Reset time remaining
+		  timeRemaining = 5;
+		  updateTimer();
+		  
+		  // Start countdown
+		  timerInterval = setInterval(() => {
+			timeRemaining--;
+			updateTimer();
+			
+			if (timeRemaining <= 0) {
+			  clearInterval(timerInterval);
+			}
+		  }, 1000);
+		}
+		
+		// Function to show a specific slide
+		function showSlide(index) {
+		  // Validate index
+		  if (index < 0) index = galleryItems.length - 1;
+		  if (index >= galleryItems.length) index = 0;
+		  
+		  // Update current index
+		  currentGalleryIndex = index;
+		  
+		  // Remove active class from all slides and indicators
+		  galleryItems.forEach(item => {
+			item.classList.remove('active', 'prev');
+		  });
+		  
+		  indicators.forEach(indicator => {
+			indicator.classList.remove('active');
+		  });
+		  
+		  // Add active class to current slide and indicator
+		  galleryItems[index].classList.add('active');
+		  indicators[index].classList.add('active');
+		  
+		  // Show header text and fade it out after a short time
+		  const header = galleryItems[index].querySelector('.gallery-item-header');
+		  header.classList.remove('fade-out');
+		  
+		  setTimeout(() => {
+			header.classList.add('fade-out');
+		  }, 2000);
+		  
+		  // If there was a previous slide, mark it as prev
+		  if (index > 0) {
+			galleryItems[index - 1].classList.add('prev');
+		  } else {
+			galleryItems[galleryItems.length - 1].classList.add('prev');
+		  }
+		  
+		  // Start timer for this slide
+		  startTimer();
+		  
+		  // If we're on the last slide, prepare to return to video
+		  if (index === galleryItems.length - 1 && autoplayEnabled) {
+			clearInterval(galleryInterval);
+			setTimeout(endGallery, 5000); // Wait for the full 5 seconds on the last slide
+		  }
+		}
+		
+		// Start gallery autoplay
+		function startGalleryAutoplay() {
+		  // Clear any existing interval
+		  clearInterval(galleryInterval);
+		  
+		  // Set interval to change slides every 5 seconds
+		  galleryInterval = setInterval(() => {
+			if (autoplayEnabled) {
+			  if (currentGalleryIndex < galleryItems.length - 1) {
+				showSlide(currentGalleryIndex + 1);
+			  } else {
+				// Last slide reached, clear interval and end gallery
+				clearInterval(galleryInterval);
+				endGallery();
+			  }
+			}
+		  }, 5000); // 5 seconds per slide
+		}
+		
+		// End gallery and return to full video
+		function endGallery() {
+		  // Clear intervals
+		  clearInterval(galleryInterval);
+		  clearInterval(timerInterval);
+		  
+		  // Hide gallery first
+		  galleryContainer.classList.remove('active');
+		  
+		  // After gallery slides away, expand video back to full width
+		  setTimeout(() => {
+			videoContainer.classList.remove('split');
+			
+			// Reset video to play from beginning
+			setTimeout(() => {
+			  startSequence();
+			}, 1000);
+		  }, 1000);
+		}
+		
+		// Event listeners for gallery navigation
+		prevBtn.addEventListener('click', () => {
+		  autoplayEnabled = false; // Disable autoplay when user navigates manually
+		  clearInterval(galleryInterval);
+		  showSlide(currentGalleryIndex - 1);
+		});
+		
+		nextBtn.addEventListener('click', () => {
+		  autoplayEnabled = false; // Disable autoplay when user navigates manually
+		  clearInterval(galleryInterval);
+		  showSlide(currentGalleryIndex + 1);
+		  
+		  // If we're on the last slide, prepare to return to video
+		  if (currentGalleryIndex === galleryItems.length - 1) {
+			setTimeout(endGallery, 5000); // Give user 5 seconds on the last slide
+		  }
+		});
+		
+		// Event listeners for indicators
+		indicators.forEach(indicator => {
+		  indicator.addEventListener('click', () => {
+			autoplayEnabled = false; // Disable autoplay when user navigates manually
+			clearInterval(galleryInterval);
+			const index = parseInt(indicator.dataset.index);
+			showSlide(index);
+			
+			// If we're on the last slide, prepare to return to video
+			if (index === galleryItems.length - 1) {
+			  setTimeout(endGallery, 5000); // Give user 5 seconds on the last slide
+			}
+		  });
+		});
+		
+		// Play/Pause functionality
+		playPauseBtn.addEventListener('click', () => {
+		  if (video.paused) {
+			video.play();
+			playPauseBtn.innerHTML = `
+			  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<rect x="6" y="4" width="4" height="16"></rect>
+				<rect x="14" y="4" width="4" height="16"></rect>
+			  </svg>
+			`;
+		  } else {
+			video.pause();
+			playPauseBtn.innerHTML = `
+			  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<polygon points="5 3 19 12 5 21 5 3"></polygon>
+			  </svg>
+			`;
+		  }
+		});
+		
+		// Mute/Unmute functionality
+		muteUnmuteBtn.addEventListener('click', () => {
+		  video.muted = !video.muted;
+		  if (video.muted) {
+			muteUnmuteBtn.innerHTML = `
+			  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+				<line x1="23" y1="9" x2="17" y2="15"></line>
+				<line x1="17" y1="9" x2="23" y2="15"></line>
+			  </svg>
+			`;
+		  } else {
+			muteUnmuteBtn.innerHTML = `
+			  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+				<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon>
+				<path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path>
+				<path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path>
+			  </svg>
+			`;
+		  }
+		});
+		
+		// Restart button
+		restartBtn.addEventListener('click', () => {
+		  // Clear any existing events and intervals
+		  clearInterval(galleryInterval);
+		  clearInterval(timerInterval);
+		  video.removeEventListener('ended', showGallery);
+		  
+		  // Start the sequence from the beginning
+		  startSequence();
+		});
+		
+		// Start the sequence
+		startSequence();
+	  });
+
+
+
+ })(jQuery);
