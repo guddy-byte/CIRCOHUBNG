@@ -879,7 +879,7 @@
                <div class="row">
                   <div class="col-lg-12">
                      <div class="footer-widget-copyright footer-widget-copyright2 text-center">
-                        <span>© 2024 Copyrights by Enterprise Development Centre (EDC). All Rights Reserved.</span>
+                        <span>© <span id="copyright-year"></span> Copyrights by Enterprise Development Centre (EDC). All Rights Reserved.</span>
                      </div>
                   </div>
                </div>
@@ -908,6 +908,9 @@
    <script src="assets/js/parallax-scroll.js"></script>
    <script src="assets/js/ajax-form.js"></script>
    <script src="assets/js/main.js"></script>
+   <script>
+      document.getElementById('copyright-year').textContent = new Date().getFullYear();
+   </script>
 </body>
 
 </html>
